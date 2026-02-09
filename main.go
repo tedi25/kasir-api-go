@@ -62,6 +62,11 @@ func main() {
 	categoryService := services.NewCategoryService(categoryRepo)
 	categoryHandler := handlers.NewCategoryHandler(categoryService)
 
+	// Transaction
+	transactionRepo := repositories.NewTransactionRepository(db)
+	transactionService := services.NewTransactionService(transactionRepo)
+	transactionHandler := handlers.NewTransactionHandler(transactionService)
+
 	// ==========================================
 	// ROUTING APP
 	// ==========================================
@@ -73,6 +78,12 @@ func main() {
 	// Route Categories
 	http.HandleFunc("/api/kategori", categoryHandler.HandleCategories)
 	http.HandleFunc("/api/kategori/", categoryHandler.HandleCategoryByID)
+
+	// ROute Transactions
+	http.HandleFunc("/api/checkout", transactionHandler.HandleCheckout)
+
+	// Route Report Harian
+	http.HandleFunc("/api/report/hari-ini", transactionHandler.HandleDailyReport)
 
 	// Route Health Check
 	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
